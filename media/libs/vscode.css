@@ -110,7 +110,7 @@ select {
 input:disabled,
 textarea:disabled,
 select:disabled {
-	opacity: 0.7
+	opacity: 0.7;
 }
 
 input::placeholder,
