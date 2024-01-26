@@ -22,10 +22,11 @@ class ValidationProvider {
     static color = ValidationProvider.#createValidation(new RegExp(/^#(?:[0-9a-fA-F]{6})$/), e => e.value, (e, v) => e.value = v);
     static double = ValidationProvider.#createValidation(new RegExp(/^\d+(?:.\d+|)$/), e => e.valueAsNumber, (e, v) => e.valueAsNumber = v);
     static integer = ValidationProvider.#createValidation(new RegExp(/^\d+$/), e => {
-        const value = e.valueAsNumber;
-        const castValue = value | 0;
-        if (value !== castValue) {
-            e.valueAsNumber = castValue;
+        const value = e.value;
+        const castValue = parseInt(value.replace('.', ''));
+        const rawValue = String(castValue);
+        if (value !== rawValue) {
+            e.value = rawValue;
         }
         return castValue;
     }, (e, v) => e.valueAsNumber = v | 0);
