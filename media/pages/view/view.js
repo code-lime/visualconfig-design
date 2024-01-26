@@ -12,9 +12,8 @@
 
     displayMain.innerHTML = '';
 
-    displayMain.appendChild(Options.createTitle('Test title'));
-    displayMain.appendChild(Options.createLine());
-    displayMain.appendChild(Options.createList(
+    displayMain.append(...Options.create(
+        'Test title',
         Options.createOptionText('Test text option', 'test value', {
             onchange: e => console.log('Text changed: ', e),
             readonly: true

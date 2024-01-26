@@ -15,7 +15,7 @@ class Options {
     /** 
      * @param {Array<Node>} elements 
      */
-    static createList(...elements) {
+    static #createList(...elements) {
         const element = /** @type {HTMLElement} */ (Utils.notNull(document.querySelector("#instances>#list")).cloneNode(true));
         element.append(...elements);
         return element;
@@ -23,14 +23,25 @@ class Options {
     /** 
      * @param {string} title 
      */
-    static createTitle(title) {
+    static #createTitle(title) {
         const element = /** @type {HTMLElement} */ (Utils.notNull(document.querySelector("#instances>#title")).cloneNode(true));
         element.textContent = title;
         return element;
     }
-    static createLine() {
+    static #createLine() {
         const element = /** @type {HTMLElement} */ (Utils.notNull(document.querySelector("#instances>#line")).cloneNode(true));
         return element;
+    }
+
+    /**
+     * @param {string} title
+     * @param {Array<Node>} elements
+     * @returns {Iterable<HTMLElement>}
+     */
+    static *create(title, ...elements) {
+        yield this.#createTitle(title);
+        yield this.#createLine();
+        yield this.#createList(...elements);
     }
 
     /** 
@@ -41,7 +52,7 @@ class Options {
         const element = /** @type {HTMLFieldSetElement} */ (Utils.notNull(document.querySelector("#instances>#group")).cloneNode(true));
         const legend = /** @type {HTMLLegendElement} */ (element.querySelector('legend'));
         legend.textContent = name;
-        element.append(this.createList(...elements));
+        element.append(this.#createList(...elements));
         return element;
     }
     /** 
