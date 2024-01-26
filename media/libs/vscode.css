@@ -118,3 +118,10 @@ textarea::placeholder,
 select::placeholder {
 	color: var(--vscode-input-placeholderForeground);
 }
+
+input[valid='false'],
+textarea[valid='false'],
+select[valid='false'] {
+	background-color: var(--vscode-inputValidation-errorBackground);
+}
+
