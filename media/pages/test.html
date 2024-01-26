@@ -1,0 +1,28 @@
+<input id="a" type="datetime-local" value="2018-06-12T19:30" />
+<input id="b" type="text" value="2018-06-12T19:30" />
+
+
+<script>
+    (function (){
+        const a = document.getElementById('a');
+        const b = document.getElementById('b');
+
+        a.addEventListener('input', e => {
+            if (e.target.value === b.value) return;
+            b.value = e.target.value;
+        });
+        b.addEventListener('input', e => {
+            if (e.target.value === a.value) return;
+            a.value = e.target.value;
+        });
+    }())
+</script>
+
+<input
+  type="text"
+  inputmode="numeric"
+  pattern="[0-9\s]{13,19}"
+  autocomplete="cc-number"
+  maxlength="19"
+  placeholder="xxxx xxxx xxxx xxxx"
+/>
