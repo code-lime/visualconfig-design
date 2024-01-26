@@ -25,7 +25,7 @@
         Options.createOptionDouble('Test double option', 1.5246, {
             onchange: e => console.log('Double changed: ', e)
         }),
-        Options.createOptionInteger('Test double option', 125, {
+        Options.createOptionInteger('Test integer option', 125, {
             onchange: e => console.log('Integer changed: ', e)
         }),
         Options.createGroup('Select region', 
