@@ -125,3 +125,10 @@ select[valid='false'] {
 	background-color: var(--vscode-inputValidation-errorBackground);
 }
 
+input:hover:not([valid='false']),
+textarea:hover:not([valid='false']) {
+	background-color: var(--vscode-inputOption-hoverBackground);
+}
+select:hover:not([valid='false']) {
+	background-color: var(--vscode-list-hoverBackground);
+}
