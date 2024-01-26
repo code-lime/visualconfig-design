@@ -6,166 +6,112 @@
 
 	// @ts-ignore
 	const vscode = acquireVsCodeApi();
-	const $ = go.GraphObject.make;
+
 	const editor = new go.Diagram('display-div',
 		{
             initialContentAlignment: go.Spot.None,
             initialAutoScale: go.Diagram.UniformToFill,
-            layout: $(go.LayeredDigraphLayout, { direction: 0, alignOption: go.LayeredDigraphLayout.AlignAll }),
-            "undoManager.isEnabled": true
+            layout: new go.LayeredDigraphLayout({
+				direction: 0,
+				alignOption: go.LayeredDigraphLayout.AlignAll
+			}),
+			undoManager: {
+				isEnabled: true
+			}
 		});
 
 	// @ts-ignore
 	window.editor = editor;
-    
-	/**
-	 * @param {string} name
-	 * @param {boolean} leftside
-	 */
-	function makePort(name, leftside) {
-		var port = $(go.Shape, "Rectangle",
-			{
-				fill: "gray",
-				stroke: null,
-				desiredSize: new go.Size(8, 8),
-				portId: name,  // declare this object to be a "port"
-				toMaxLinks: 1,  // don't allow more than one link into a port
-				cursor: "pointer"  // show a different cursor to indicate potential link point
-			});
-
-		var lab = $(go.TextBlock, name,  // the name of the port
-			{ font: "7pt sans-serif" });
-
-		var panel = $(go.Panel, "Horizontal",
-			{ margin: new go.Margin(2, 0) });
-
-		// set up the port/panel based on which side of the node it will be on
-		if (leftside) {
-			port.toSpot = go.Spot.Left;
-			port.toLinkable = true;
-			lab.margin = new go.Margin(1, 0, 0, 1);
-			panel.alignment = go.Spot.TopLeft;
-			panel.add(port);
-			panel.add(lab);
-		} else {
-			port.fromSpot = go.Spot.Right;
-			port.fromLinkable = true;
-			lab.margin = new go.Margin(1, 1, 0, 0);
-			panel.alignment = go.Spot.TopRight;
-			panel.add(lab);
-			panel.add(port);
+	
+	Nodes.make(editor, {
+		'Table': {
+			icon: `${assetsUrl}/images/table.svg`,
+			background: 'forestgreen',
+			outports: {
+				'OUT': {}
+			}
+		},
+		'Join': {
+			icon: `${assetsUrl}/images/join.svg`,
+			background: 'mediumorchid',
+			inports: {
+				'L': {},
+				'R': {},
+			},
+			outports: {
+				'UL': {},
+				'ML': {},
+				'M': {},
+				'MR': {},
+				'UR': {}
+			}
+		},
+		'Project': {
+			icon: `${assetsUrl}/images/project.svg`,
+			background: 'darkcyan',
+			inports: {
+				'': {}
+			},
+			outports: {
+				'OUT': {}
+			}
+		},
+		'Filter': {
+			icon: `${assetsUrl}/images/filter.svg`,
+			background: 'cornflowerblue',
+			inports: {
+				'': {}
+			},
+			outports: {
+				'OUT': {},
+				'INV': {}
+			}
+		},
+		'Group': {
+			icon: `${assetsUrl}/images/group.svg`,
+			background: 'mediumpurple',
+			inports: {
+				'': {}
+			},
+			outports: {
+				'OUT': {}
+			}
+		},
+		'Sort': {
+			icon: `${assetsUrl}/images/sort.svg`,
+			background: 'sienna',
+			inports: {
+				'': {}
+			},
+			outports: {
+				'OUT': {}
+			}
+		},
+		'Export': {
+			icon: `${assetsUrl}/images/upload.svg`,
+			background: 'darkred',
+			inports: {
+				'': {}
+			}
 		}
-		return panel;
-	}
+	});
 
-	/**
-	 * @param {string} typename
-	 * @param {string} icon
-	 * @param {string} background
-	 * @param {go.GraphObject[]} inports
-	 * @param {go.GraphObject[]} outports
-	 */
-	function makeTemplate(typename, icon, background, inports, outports) {
-		var node =  new go.Node("Spot", {
-			//margin: 5,
-			//background: "red"
-		})
-		//.bind(new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify))
-		.add(new go.Panel("Auto", {
-				width: 100,
-				height: 120,
-			})
-			.add(new go.Shape("Rectangle", {
-				fill: background,
-				stroke: null,
-				strokeWidth: 0,
-				spot1: go.Spot.TopLeft,
-				spot2: go.Spot.BottomRight
-			}))
-			.add(new go.Panel("Table")
-				.add(new go.TextBlock(typename, {
-					row: 0,
-
-					margin: 3,
-					maxSize: new go.Size(80, NaN),
-					stroke: "black",
-					font: "bold 12pt sans-serif"
-				}))
-				.add(new go.Picture(icon, {
-					row: 1,
-
-					width: 16,
-					height: 16,
-					scale: 3.
-				}))
-				.add(new go.TextBlock({
-					row: 2,
-				
-					margin: 3,
-					editable: true,
-					maxSize: new go.Size(80, 40),
-					stroke: "white",
-					font: "bold 9pt sans-serif"
-				})
-					.bind(new go.Binding("text", "name").makeTwoWay()))
-		))
-		.add(new go.Panel("Vertical", {
-			alignment: go.Spot.Left,
-			alignmentFocus: new go.Spot(0, 0.5, 8, 0)
-		}).add(...inports))
-		.add(new go.Panel("Vertical", {
-			alignment: go.Spot.Right,
-			alignmentFocus: new go.Spot(1, 0.5, -8, 0)
-		}).add(...outports));
+	editor.linkTemplate = new go.Link({
+		routing: go.Link.Orthogonal,
+		corner: 25,
+		relinkableFrom: true,
+		relinkableTo: true
+	})
+	.add(new go.Shape({
+		stroke: 'gray',
+		strokeWidth: 2
+	}))
+	.add(new go.Shape({
+		stroke: 'gray',
+		fill: 'gray',
+		toArrow: "Standard"
+	}));
 /*
-		var node = $(go.Node, "Spot",
-			$(go.Panel, "Auto",
-				{ width: 100, height: 120 },
-				$(go.Shape, "Rectangle",
-					{
-						fill: background, stroke: null, strokeWidth: 0,
-						spot1: go.Spot.TopLeft, spot2: go.Spot.BottomRight
-					}),
-				$(go.Panel, "Table",
-					$(go.TextBlock, typename,
-						{
-							row: 0,
-							margin: 3,
-							maxSize: new go.Size(80, NaN),
-							stroke: "black",
-							font: "bold 12pt sans-serif"
-						}),
-					$(go.Picture, icon,
-						{ row: 1, width: 16, height: 16, scale: 3.0 }),
-					$(go.TextBlock,
-						{
-							row: 2,
-							margin: 3,
-							editable: true,
-							maxSize: new go.Size(80, 40),
-							stroke: "white",
-							font: "bold 9pt sans-serif"
-						},
-						new go.Binding("text", "name").makeTwoWay())
-				)
-			),
-			$(go.Panel, "Vertical",
-				{
-					alignment: go.Spot.Left,
-					alignmentFocus: new go.Spot(0, 0.5, 8, 0)
-				},
-				inports),
-			$(go.Panel, "Vertical",
-				{
-					alignment: go.Spot.Right,
-					alignmentFocus: new go.Spot(1, 0.5, -8, 0)
-				},
-				outports)
-		);
-*/
-		editor.nodeTemplateMap.set(typename, node);
-	}
-
 	makeTemplate("Table", `${assetsUrl}/images/table.svg`, "forestgreen",
 		[],
 		[makePort("OUT", false)]);
@@ -192,8 +138,8 @@
 
 	makeTemplate("Export", `${assetsUrl}/images/upload.svg`, "darkred",
 		[makePort("", true)],
-		[]);
-
+		[]);*/
+/*
 	editor.linkTemplate =
 		$(go.Link,
 			{
