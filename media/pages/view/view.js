@@ -19,7 +19,7 @@
             onchange: e => console.log('Text changed: ', e),
             readonly: true
         }),
-        Options.createOptionColor('Test color option', '#FFF', {
+        Options.createOptionColor('Test color option', '#FFFFFF', {
             onchange: e => console.log('Color changed: ', e)
         }),
         Options.createOptionDouble('Test double option', 1.5246, {
