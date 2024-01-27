@@ -15,9 +15,7 @@
 				direction: 0,
 				alignOption: go.LayeredDigraphLayout.AlignAll
 			}),
-			undoManager: {
-				isEnabled: true
-			}
+			"undoManager.isEnabled": true
 		});
 
 	// @ts-ignore
