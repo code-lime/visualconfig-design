@@ -10,13 +10,11 @@ M 1,0 L 0,1 L 1,2 L 2,1 L 1,0 z
 <path name="circle" visibility="hidden" d="
 M 1,0 A 1,1, 180, 0,0, 1,2 A 1,1, 180, 0,0, 1,0 z
 " />
-<path name="square" visibility="hidden" d="
-M 1,0 L 0,0 L 0,2 L 2,2 L 2,0 z
-" />
+<path name="square" visibility="hidden" d="M 1.707,0.293 L 0.293,0.293 L 0.293,1.707 L 1.707,1.707 L 1.707,0.293 z" />
 <path name="star" visibility="hidden" d="
 M 1,0 L 0.75,0.75 L 0,1 L 0.75,1.25 L 1,2 L 1.25,1.25 L 2,1 L 1.25,0.75 L 1,0 z
 " />
-<path name="hexagon" visibility="hidden" d="" />
+<path name="hexagon" visibility="_hidden" d="M 1.809,0.412 L 0.691,0.049 L 0,1 L 0.691,1.951 L 1.809,1.588 L 1.809,0.412 z" />
 <path name="octagon" visibility="hidden" d="" />
 <path name="pentagon" visibility="hidden" d="" />
 <!--

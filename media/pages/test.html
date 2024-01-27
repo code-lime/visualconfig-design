@@ -1,28 +1,54 @@
-<input id="a" type="datetime-local" value="2018-06-12T19:30" />
-<input id="b" type="text" value="2018-06-12T19:30" />
-
-
 <script>
-    (function (){
-        const a = document.getElementById('a');
-        const b = document.getElementById('b');
+    function createFigure(beginAngle, count) {
+		/**
+		 * @returns {Iterable<{x:number,y:number}>}
+		 */
+		function *createFigurePoints() {
+			const TO_RAD = Math.PI / 180.0;
+			const ROUND_SCALE = 1000;
 
-        a.addEventListener('input', e => {
-            if (e.target.value === b.value) return;
-            b.value = e.target.value;
-        });
-        b.addEventListener('input', e => {
-            if (e.target.value === a.value) return;
-            a.value = e.target.value;
-        });
-    }())
+			const angleStep = 360.0 / count;
+			for (let i = 0; i < count; i++) {
+				const val = (beginAngle + i * angleStep) * TO_RAD;
+				yield {
+					x: Math.round((1 + Math.cos(val)) * ROUND_SCALE) / ROUND_SCALE,
+					y: Math.round((1 - Math.sin(val)) * ROUND_SCALE) / ROUND_SCALE
+				};
+			}
+		}
+		/**
+		 * @param {Iterable<{x:number,y:number}>} points 
+		 * @returns {Iterable<string>}
+		 */
+		function *svgPoints(points) {
+			/** @type {{x:number,y:number} | undefined} */
+			let initPoint = undefined;
+			for (const point of points) {
+				if (initPoint === undefined) {
+					initPoint = point;
+					yield `M ${point.x},${point.y}`;
+				} else {
+					yield `L ${point.x},${point.y}`;
+				}
+			}
+			if (initPoint !== undefined) {
+				yield `L ${initPoint.x},${initPoint.y}`;
+			}
+			yield 'z';
+		}
+
+		return [...svgPoints(createFigurePoints())].join(' ');
+	}
+    function load(beginAngle, count) {
+        document.getElementById('tmp').setAttribute('d', createFigure(beginAngle, count));
+    }
 </script>
 
-<input
-  type="text"
-  inputmode="numeric"
-  pattern="[0-9\s]{13,19}"
-  autocomplete="cc-number"
-  maxlength="19"
-  placeholder="xxxx xxxx xxxx xxxx"
-/>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path id="tmp" d="M 10,30
+             A 20,20 0,0,1 50,30
+             A 20,20 0,0,1 90,30
+             Q 90,60 50,90
+             Q 10,60 10,30 z" />
+  </svg>
+  
