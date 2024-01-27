@@ -204,5 +204,4 @@ class Nodes {
 			tool.linkValidation = (v0,v1,v2,v3,v4) => otherValidation(v0,v1,v2,v3,v4) || Nodes.#portTypeValidation(v0,v1,v2,v3,v4);
 		}
 	}
-	
 }
