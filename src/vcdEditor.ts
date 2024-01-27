@@ -103,7 +103,9 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
 		const libs = ['libs'];
 
 		const scriptEditorUri = this.asMediaUri(webview, ...local, 'editor.js');
+		const scriptNodesUri = this.asMediaUri(webview, ...local, 'nodes.js');
 		const scriptGoJSUri = this.asMediaUri(webview, ...libs, 'go-debug.js');
+		const scriptUtilsUri = this.asMediaUri(webview, ...libs, 'utils.js');
 		
 		const styleEditorUri = this.asMediaUri(webview, ...local, 'editor.css');
 		
