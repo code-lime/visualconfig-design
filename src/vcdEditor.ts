@@ -134,8 +134,12 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
 				<body>
 					${htmlEditor}
 
-					<script nonce="${nonce}" src="${scriptGoJSUri}"></script>
-					<script nonce="${nonce}" src="${scriptEditorUri}"></script>
+					${[
+						scriptGoJSUri,
+						scriptUtilsUri,
+						scriptNodesUri,
+						scriptEditorUri,
+					].map(uri => `<script nonce="${nonce}" src="${uri}"></script>`).join('')}
 				</body>
 			</html>`;
 	}
