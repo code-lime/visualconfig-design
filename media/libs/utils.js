@@ -96,4 +96,43 @@ class Utils {
             next: func
         };
     }
+
+    /**
+     * 
+     * @param {number} value 
+     * @param {number} digits 
+     * @returns {string}
+     */
+    static toHex(value, digits = 2) {
+        const hex = value.toString(16);
+        const append = Math.max(0, digits - hex.length);
+        return '0'.repeat(append) + hex;
+    }
+
+    /**
+     * @param {number} h [0;1]
+     * @param {number} s [0;1]
+     * @param {number} v [0;1]
+     */
+    static asHsv(h, s, v) {
+        let r, g, b;
+
+        const i = Math.floor(h * 6);
+        const f = h * 6 - i;
+        const p = v * (1 - s);
+        const q = v * (1 - f * s);
+        const t = v * (1 - (1 - f) * s);
+
+        switch (i % 6) {
+            case 0: r = v, g = t, b = p; break;
+            case 1: r = q, g = v, b = p; break;
+            case 2: r = p, g = v, b = t; break;
+            case 3: r = p, g = q, b = v; break;
+            case 4: r = t, g = p, b = v; break;
+            case 5: r = v, g = p, b = q; break;
+            default: r = 0, g = 0, b = 0; break;
+        }
+
+        return Utils.toHex(Math.round(r * 255)) + Utils.toHex(Math.round(g * 255)) + Utils.toHex(Math.round(b * 255));
+    }
 }
