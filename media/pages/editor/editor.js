@@ -20,80 +20,116 @@
 
 	// @ts-ignore
 	window.editor = editor;
-	
+
+	Nodes.registerPortTypeValidation(editor);
 	Nodes.make(editor, {
 		'Table': {
 			icon: `${assetsUrl}/images/table.svg`,
 			background: 'forestgreen',
 			outports: {
-				'OUT': {}
+				'OUT': {
+					type: 'a'
+				}
 			}
 		},
 		'Join': {
 			icon: `${assetsUrl}/images/join.svg`,
 			background: 'mediumorchid',
 			inports: {
-				'L': {},
-				'R': {},
+				'L': {
+					type: 'a'
+				},
+				'R': {
+					type: 'a'
+				},
 			},
 			outports: {
-				'UL': {},
-				'ML': {},
-				'M': {},
-				'MR': {},
-				'UR': {}
+				'UL': {
+					type: 'a'
+				},
+				'ML': {
+					type: 'a'
+				},
+				'M': {
+					type: 'a'
+				},
+				'MR': {
+					type: 'a'
+				},
+				'UR': {
+					type: 'a'
+				}
 			}
 		},
 		'Project': {
 			icon: `${assetsUrl}/images/project.svg`,
 			background: 'darkcyan',
 			inports: {
-				'': {}
+				'': {
+					type: 'a'
+				}
 			},
 			outports: {
-				'OUT': {}
+				'OUT': {
+					type: 'filter'
+				}
 			}
 		},
 		'Filter': {
 			icon: `${assetsUrl}/images/filter.svg`,
 			background: 'cornflowerblue',
 			inports: {
-				'': {}
+				'': {
+					type: 'filter'
+				}
 			},
 			outports: {
-				'OUT': {},
-				'INV': {}
+				'OUT': {
+					type: 'a'
+				},
+				'INV': {
+					type: 'a'
+				}
 			}
 		},
 		'Group': {
 			icon: `${assetsUrl}/images/group.svg`,
 			background: 'mediumpurple',
 			inports: {
-				'': {}
+				'': {
+					type: 'a'
+				}
 			},
 			outports: {
-				'OUT': {}
+				'OUT': {
+					type: 'a'
+				}
 			}
 		},
 		'Sort': {
 			icon: `${assetsUrl}/images/sort.svg`,
 			background: 'sienna',
 			inports: {
-				'': {}
+				'': {
+					type: 'a'
+				}
 			},
 			outports: {
-				'OUT': {}
+				'OUT': {
+					type: 'b'
+				}
 			}
 		},
 		'Export': {
 			icon: `${assetsUrl}/images/upload.svg`,
 			background: 'darkred',
 			inports: {
-				'': {}
+				'': {
+					type: 'b'
+				}
 			}
 		}
 	});
-
 	editor.linkTemplate = new go.Link({
 		routing: go.Link.Orthogonal,
 		corner: 25,

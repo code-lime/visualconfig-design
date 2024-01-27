@@ -10,6 +10,7 @@
 
 /**
  * @typedef {Object} NodePort
+ * @property {string} type
  */
 
 /**
@@ -131,4 +132,62 @@ class Nodes {
             Nodes.#makeTemplate(editor, typename, template);
         }
     }
+
+	/**
+	 * @param {go.GraphObject} port
+	 * @returns {NodePort | undefined}
+	 */
+	static #getNodePort(port) {
+		const typename = port.part?.name;
+		if (typename === undefined) {
+			return undefined;
+		}
+		const part = port.diagram?.nodeTemplateMap.get(typename);
+		if (part === undefined || part === null || !('rawData' in part)) {
+			return undefined;
+		}
+		const portname = port.portId;
+		const template = /** @type {NodeTemplate} */ (part.rawData);
+		const isInput = port.toLinkable;
+		const ports = isInput ? template.inports : template.outports;
+		if (ports === undefined || !(portname in ports)) {
+			return undefined;
+		}
+		return ports[portname];
+	}
+
+	/**
+	 * @param {go.Node} fromNode 
+	 * @param {go.GraphObject} fromPort 
+	 * @param {go.Node} toNode 
+	 * @param {go.GraphObject} toPort 
+	 * @param {go.Link} link
+	 * @returns {boolean}
+	 */
+	static #portTypeValidation(fromNode, fromPort, toNode, toPort, link) {
+		const fromData = Nodes.#getNodePort(fromPort);
+		const toData = Nodes.#getNodePort(toPort);
+		if (fromData === undefined || toData === undefined) {
+			console.error('Not typed ports ', fromPort, toPort, ' in nodes ', fromNode, toNode, ' in link ', link);
+			return false;
+		}
+		return fromData.type === toData.type;
+	}
+
+    /**
+     * @param {go.Diagram} editor
+     */
+	static registerPortTypeValidation(editor) {
+		const tool = editor.toolManager.linkingTool;
+		if (tool.linkValidation === null) {
+			tool.linkValidation = Nodes.#portTypeValidation;
+		} else {
+			const otherValidation = tool.linkValidation;
+			if (otherValidation === Nodes.#portTypeValidation) {
+				return;
+			}
+			tool.linkValidation = (v0,v1,v2,v3,v4) => otherValidation(v0,v1,v2,v3,v4) || Nodes.#portTypeValidation(v0,v1,v2,v3,v4);
+		}
+	}
+	
 }
