@@ -86,8 +86,8 @@ class Nodes {
         const port = new go.Shape({
             fill: '#' + color,
             stroke: null,
-			width: 10,
-			height: 10,
+			width: 12,
+			height: 12,
             portId: name,
             toMaxLinks: 1,
 			geometryString: 'F ' + figure,
