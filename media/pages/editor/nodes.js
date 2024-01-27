@@ -18,11 +18,60 @@
  */
 class Nodes {
 	static #figures = [
-		"M 1,0 L 0,1 L 1,2 L 2,1 L 1,0 z", //diamond
 		"M 1,0 A 1,1, 180, 0,0, 1,2 A 1,1, 180, 0,0, 1,0 z", //circle
-		"M 1,0 L 0,0 L 0,2 L 2,2 L 2,0 z", //square
-		"M 1,0 L 0.75,0.75 L 0,1 L 0.75,1.25 L 1,2 L 1.25,1.25 L 2,1 L 1.25,0.75 L 1,0 z" //star
+		//"M 1,0 L 0.75,0.75 L 0,1 L 0.75,1.25 L 1,2 L 1.25,1.25 L 2,1 L 1.25,0.75 L 1,0 z", //star
+		Nodes.#createFigure(90, 4), //diamond
+		Nodes.#createFigure(45, 4), //quad
+		Nodes.#createFigure(90, 5), //pentagon
+		Nodes.#createFigure(90, 6), //hexagon
+		Nodes.#createFigure(90, 7), //heptagon
+		Nodes.#createFigure(90, 8), //octagon
 	];
+
+	/**
+	 * @param {number} beginAngle 
+	 * @param {number} count 
+	 */
+	static #createFigure(beginAngle, count) {
+		/**
+		 * @returns {Iterable<{x:number,y:number}>}
+		 */
+		function *createFigurePoints() {
+			const TO_RAD = Math.PI / 180.0;
+			const ROUND_SCALE = 1000;
+
+			const angleStep = 360.0 / count;
+			for (let i = 0; i < count; i++) {
+				const val = (beginAngle + i * angleStep) * TO_RAD;
+				yield {
+					x: 1 + Math.round(Math.cos(val) * ROUND_SCALE) / ROUND_SCALE,
+					y: 1 - Math.round(Math.sin(val) * ROUND_SCALE) / ROUND_SCALE
+				};
+			}
+		}
+		/**
+		 * @param {Iterable<{x:number,y:number}>} points 
+		 * @returns {Iterable<string>}
+		 */
+		function *svgPoints(points) {
+			/** @type {{x:number,y:number} | undefined} */
+			let initPoint = undefined;
+			for (const point of points) {
+				if (initPoint === undefined) {
+					initPoint = point;
+					yield `M ${point.x},${point.y}`;
+				} else {
+					yield `L ${point.x},${point.y}`;
+				}
+			}
+			if (initPoint !== undefined) {
+				yield `L ${initPoint.x},${initPoint.y}`;
+			}
+			yield 'z';
+		}
+
+		return [...svgPoints(createFigurePoints())].join(' ');
+	}
 
 	/**
 	 * @param {string} name
