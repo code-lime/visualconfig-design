@@ -17,16 +17,31 @@
  * @type {Nodes}
  */
 class Nodes {
+	static #figures = [
+		"M 1,0 L 0,1 L 1,2 L 2,1 L 1,0 z", //diamond
+		"M 1,0 A 1,1, 180, 0,0, 1,2 A 1,1, 180, 0,0, 1,0 z", //circle
+		"M 1,0 L 0,0 L 0,2 L 2,2 L 2,0 z", //square
+		"M 1,0 L 0.75,0.75 L 0,1 L 0.75,1.25 L 1,2 L 1.25,1.25 L 2,1 L 1.25,0.75 L 1,0 z" //star
+	];
+
 	/**
 	 * @param {string} name
 	 * @param {NodePort} data
 	 * @param {boolean} isInput
 	 */
 	static #makePort(name, data, isInput) {
+		const random = Utils.random(data.type);
+		const figure = Nodes.#figures[Math.floor(random.next() * Nodes.#figures.length)];
+		const color = Utils.asHsv(random.next(), random.next() * 0.25 + 0.75, random.next() * 0.25 + 0.75);
+
+        const port = new go.Shape({
+            fill: '#' + color,
             stroke: null,
-            desiredSize: new go.Size(8, 8),
+			width: 10,
+			height: 10,
             portId: name,
             toMaxLinks: 1,
+			geometryString: 'F ' + figure,
             cursor: "pointer",
         });
 		// @ts-ignore
