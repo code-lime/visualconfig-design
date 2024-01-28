@@ -199,20 +199,18 @@ class Nodes {
     }
 
 	/**
-	 * @param {go.GraphObject} port
+	 * @param {go.GraphObject | null | undefined} port
 	 * @returns {NodePort | undefined}
 	 */
 	static getNodePort(port) {
-		const typename = port.part?.name;
-		if (typename === undefined) {
+		if (port === undefined || port === null) {
 			return undefined;
 		}
-		const part = port.diagram?.nodeTemplateMap.get(typename);
-		if (part === undefined || part === null || !('rawData' in part)) {
+		const template = Nodes.getNodeTemplate(port?.part);
+		if (template === undefined) {
 			return undefined;
 		}
 		const portname = port.portId;
-		const template = /** @type {NodeTemplate} */ (part.rawData);
 		const isInput = port.toLinkable;
 		const ports = isInput ? template.inports : template.outports;
 		if (ports === undefined || !(portname in ports)) {
