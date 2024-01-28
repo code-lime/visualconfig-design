@@ -212,6 +212,9 @@
 			if (idx >= 0) document.title = document.title.slice(0, idx);
 		}*/
 	});
+	function save() {
+		vscode.postMessage({ type: 'save', body: JSON.parse(editor.model.toJson()) });
+	}
 
 	// Handle messages from the extension
 	window.addEventListener('message', async e => {
