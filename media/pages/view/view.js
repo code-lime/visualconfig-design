@@ -12,39 +12,122 @@
 
     displayMain.innerHTML = '';
 
-    displayMain.append(...Options.create(
-        'Test title',
-        Options.createOptionText('Test text option', 'test value', {
-            onchange: e => console.log('Text changed: ', e),
-            readonly: true
-        }),
-        Options.createOptionColor('Test color option', '#FFFFFF', {
-            onchange: e => console.log('Color changed: ', e)
-        }),
-        Options.createOptionDouble('Test double option', 1.5246, {
-            onchange: e => console.log('Double changed: ', e)
-        }),
-        Options.createOptionInteger('Test integer option', 125, {
-            onchange: e => console.log('Integer changed: ', e)
-        }),
-        Options.createGroup('Select region', 
-            Options.createOptionSelect('Test select option', ['Test', 'select', 'option', 'testing'], 'select', {
-                onchange: e => console.log('Select (array): ', e)
-            }),
-            Options.createOptionSelect('Test select option', { 'a':'Any', 'b':'other', 'c':'test with', 'd':'number', 'e':'indexing'}, 'b', {
-                onchange: e => console.log('Select (object): ', e)
-            }),
-        ),
-    ));
+    /**
+     * @param {NodeElement} element 
+     * @param {string} fieldName 
+     */
+    function onChange(element, fieldName) {
+        const message = {
+            type: 'change',
+            body: {
+                id: element.id,
+                field: fieldName,
+                value: element.fields[fieldName].value
+            }
+        };
+        console.log(`Changed field '${fieldName}' in element '${element.id}' with new value ${element.fields[fieldName].value}`);
+        console.log(`Send message: ${JSON.stringify(message)}`);
+        vscode.postMessage(message);
+    }
 
 	/**
-	 * @param {Array<{key:number,type:string,name:string}>} elements
+	 * @param {Array<NodeElement>} elements
 	 */
     function onSelect(elements) {
-        if (elements.length < 1) {
+        if (elements.length >= 1) {
+            const element = elements[0];
 
+            /** @type {Object.<string, (Object.<string, Node>)>} */
+            const groups = {};
+
+            for (const [key, field] of Object.entries(element.fields)) {
+                const groupKey = field.group ?? '';
+
+                /** @type {Object.<string, Node>} */
+                let group;
+
+                if (groupKey in groups) {
+                    group = groups[groupKey];
+                } else {
+                    group = {};
+                    groups[groupKey] = group;
+                }
+
+                /** @type {Node} */
+                let node;
+
+                switch (field.type) {
+                    case "color": {
+                        node = Options.createOptionColor(field.name, field.value, {
+                            readonly: field.readonly,
+                            onchange: e => {
+                                field.value = e;
+                                onChange(element, key);
+                            },
+                        });
+                        break;
+                    }
+                    case "text": {
+                        node = Options.createOptionText(field.name, field.value, {
+                            readonly: field.readonly,
+                            onchange: e => {
+                                field.value = e;
+                                onChange(element, key);
+                            },
+                        });
+                        break;
+                    }
+                    case "integer": {
+                        node = Options.createOptionInteger(field.name, field.value, {
+                            readonly: field.readonly,
+                            onchange: e => {
+                                field.value = e;
+                                onChange(element, key);
+                            },
+                        });
+                        break;
+                    }
+                    case "double": {
+                        node = Options.createOptionDouble(field.name, field.value, {
+                            readonly: field.readonly,
+                            onchange: e => {
+                                field.value = e;
+                                onChange(element, key);
+                            },
+                        });
+                        break;
+                    }
+                    case "select": {
+                        node = Options.createOptionSelect(field.name, field.list, field.value, {
+                            readonly: field.readonly,
+                            onchange: e => {
+                                field.value = e;
+                                onChange(element, key);
+                            },
+                        });
+                        break;
+                    }
+                }
+
+                group[key] = node;
+            }
+
+            displayMain.replaceChildren(...Options.create(
+                element.type,
+                ...Object.entries(groups)
+                    .flatMap(v => {
+                        const [groupKey, group] = v;
+                        if (groupKey === '') {
+                            return Object.values(group);
+                        } else {
+                            return Options.createGroup(groupKey, ...Object.values(group));
+                        }
+                    })));
+        } else {
+            displayMain.replaceChildren(...Options.create('...'));
         }
     }
+    onSelect([]);
 
     window.addEventListener("message", e => {
 		const { type, body } = e.data;
