@@ -220,6 +220,21 @@ class Nodes {
 		}
 		return ports[portname];
 	}
+	/**
+	 * @param {go.Part | null | undefined} node
+	 * @returns {NodeTemplate | undefined}
+	 */
+	static getNodeTemplate(node) {
+		const typename = node?.name;
+		if (typename === undefined) {
+			return undefined;
+		}
+		const part = node?.diagram?.nodeTemplateMap.get(typename);
+		if (part === undefined || part === null || !('rawData' in part)) {
+			return undefined;
+		}
+		return /** @type {NodeTemplate} */ (part.rawData);
+	}
 
 	/**
 	 * @param {go.Node} fromNode 
