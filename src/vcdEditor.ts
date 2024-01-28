@@ -36,7 +36,7 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
             console.log('Document: ', document);
 			webviewPanel.webview.postMessage({
 				type: 'update',
-				body: document.getText(),
+				body: JSON.parse(document.getText()),
 			});
 		}
 
