@@ -191,9 +191,37 @@
 	}));
 	
 	editor.addDiagramListener("ChangedSelection", e => {
+		/** @type {Array<NodeElement>} */
 		var elements = [];
 		editor.selection.each(e => {
-			elements.push(e.data);
+			const template = Nodes.getNodeTemplate(e);
+			if (template === undefined || typeof e.key !== 'number') {
+				return;
+			}
+
+			/** @type {NodeElement} */
+			const element = {
+				id: e.key,
+				type: e.name,
+				fields: {}
+			};
+			
+			if (template.fields !== undefined) {
+				const fields = element.fields;
+	
+				for (const [key, field] of Object.entries(template.fields)) {
+					const variableField = structuredClone(field);
+					if ('fields' in e.data) {
+						const fieldsData = e.data.fields;
+						if (key in fieldsData) {
+							variableField.value = fieldsData[key];
+						}
+					}
+					fields[key] = variableField;
+				}
+			}
+
+			elements.push(element);
 		});
 		vscode.postMessage({ type: 'select', body: elements });
 		/*var idx = document.title.indexOf("*");
