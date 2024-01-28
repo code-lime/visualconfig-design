@@ -164,9 +164,10 @@ class Nodes {
 					row: 2,
 				
 					margin: 3,
-					editable: true,
+					editable: false,
 					maxSize: new go.Size(80, 40),
 					stroke: "white",
+					
 					font: "bold 9pt sans-serif"
 				})
 					.bind(new go.Binding("text", "name").makeTwoWay()))
