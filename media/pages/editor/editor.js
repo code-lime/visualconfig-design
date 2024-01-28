@@ -191,7 +191,6 @@
 	}));
 	
 	editor.addDiagramListener("ChangedSelection", e => {
-		console.log('Changed: ', e.subject);
 		var elements = [];
 		editor.selection.each(e => {
 			elements.push(e.data);
