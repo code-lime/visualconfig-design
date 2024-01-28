@@ -261,6 +261,24 @@
 				vscode.postMessage({ type: 'select', body: [] });
 				return;
 			}
+			case 'change': {
+				/** @type {{id:number,field:string,value:any}} */ 
+				const { id, field, value } = body;
+				const part = editor.findPartForKey(id);
+				if (part === null) {
+					editor.clearSelection();
+					return;
+				}
+				let fieldsData;
+				if ('fields' in part.data) {
+					fieldsData = part.data.fields;
+				} else {
+					part.data.fields = fieldsData = {};
+				}
+				fieldsData[field] = value;
+				save();
+				return;
+			}
 			default:
 				console.warn(`Not register message listener of type ${type}: `, e);
 				return;
