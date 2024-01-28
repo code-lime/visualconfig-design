@@ -221,11 +221,18 @@
 		console.log("OM: ", e);
 		const { type, body } = e.data;
 		switch (type) {
-			case 'update':
-				console.log('UPDATE: ', JSON.parse(body));
+			case 'update': {
+				console.log('UPDATE: ', body);
+				const newRaw = JSON.stringify(body);
+				const oldRaw = JSON.stringify(JSON.parse(editor.model.toJson()));
+				if (newRaw === oldRaw) {
+					console.log('NOT CHANGED');
+					return;
+				}
 				editor.model = go.Model.fromJson(body);
 				vscode.postMessage({ type: 'select', body: [] });
 				return;
+			}
 			default:
 				console.warn(`Not register message listener of type ${type}: `, e);
 				return;
