@@ -4,6 +4,7 @@
  * @typedef {Object} NodeTemplate
  * @property {string | undefined} icon
  * @property {string} background
+ * @property {Object.<string, AnyNodeField>} [fields]
  * @property {Object.<string, NodePort>} [inports]
  * @property {Object.<string, NodePort>} [outports]
  */
