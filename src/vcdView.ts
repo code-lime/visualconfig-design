@@ -43,8 +43,10 @@ export class VcdView implements vscode.WebviewViewProvider {
 				case 'ready':
 					console.log('Active `.vcd` editors: ', ...this.webviews.getByType(VcdEditor.viewType));
 					break;
-				case 'select': 
-					console.log('Select: ', body);
+				case 'change':
+					for (const view of this.webviews.getByType(VcdEditor.viewType)) {
+						view.webview.postMessage({ type: type, body: body });
+					}
 					break;
 				default:
 					console.warn(`Not register message listener of type ${type}: `, e);
