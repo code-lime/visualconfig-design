@@ -202,7 +202,7 @@ class Nodes {
 	 * @param {go.GraphObject} port
 	 * @returns {NodePort | undefined}
 	 */
-	static #getNodePort(port) {
+	static getNodePort(port) {
 		const typename = port.part?.name;
 		if (typename === undefined) {
 			return undefined;
@@ -245,8 +245,8 @@ class Nodes {
 	 * @returns {boolean}
 	 */
 	static #portTypeValidation(fromNode, fromPort, toNode, toPort, link) {
-		const fromData = Nodes.#getNodePort(fromPort);
-		const toData = Nodes.#getNodePort(toPort);
+		const fromData = Nodes.getNodePort(fromPort);
+		const toData = Nodes.getNodePort(toPort);
 		if (fromData === undefined || toData === undefined) {
 			console.error('Not typed ports ', fromPort, toPort, ' in nodes ', fromNode, toNode, ' in link ', link);
 			return false;
