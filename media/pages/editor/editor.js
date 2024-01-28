@@ -26,6 +26,20 @@
 		'Table': {
 			icon: `${assetsUrl}/images/table.svg`,
 			background: 'forestgreen',
+			fields: {
+				'rows': {
+					name: 'Rows',
+					readonly: false,
+					type: "integer",
+					value: 1
+				},
+				'cells': {
+					name: 'Cells',
+					readonly: false,
+					type: "integer",
+					value: 1
+				}
+			},
 			outports: {
 				'OUT': {
 					type: 'a'
@@ -64,6 +78,14 @@
 		'Project': {
 			icon: `${assetsUrl}/images/project.svg`,
 			background: 'darkcyan',
+			fields: {
+				'project_name': {
+					name: "Project name",
+					readonly: false,
+					type: "text",
+					value: "Base project name"
+				}
+			},
 			inports: {
 				'': {
 					type: 'a'
@@ -123,6 +145,28 @@
 		'Export': {
 			icon: `${assetsUrl}/images/upload.svg`,
 			background: 'darkred',
+			fields: {
+				'output_name': {
+					name: "Output name",
+					readonly: false,
+					type: "text",
+					value: "result"
+				},
+				'file_output_name': {
+					name: "File name",
+					readonly: false,
+					type: "text",
+					value: "result",
+					group: 'file'
+				},
+				'file_output_dir': {
+					name: "File path",
+					readonly: false,
+					type: "text",
+					value: "result",
+					group: 'file'
+				},
+			},
 			inports: {
 				'': {
 					type: 'b'
