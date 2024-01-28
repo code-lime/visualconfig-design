@@ -71,6 +71,9 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
 				case 'select':
 					this.selectView(body);
 					return;
+				case 'save':
+					VcdEditor.save(document, body);
+					return;
 				default:
 					console.warn(`Not register message listener of type ${type}: `, e);
 					return;
@@ -85,6 +88,17 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
 					return;
 			}*/
 		});
+	}
+
+	private static async save(document: vscode.TextDocument, json: any) {
+		const edit = new vscode.WorkspaceEdit();
+		
+		edit.replace(
+			document.uri,
+			new vscode.Range(0, 0, document.lineCount, 0),
+			JSON.stringify(json, null, 2));
+
+		await vscode.workspace.applyEdit(edit);
 	}
 
 	private selectView(body: any): void {
