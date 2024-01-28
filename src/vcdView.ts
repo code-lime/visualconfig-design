@@ -37,6 +37,7 @@ export class VcdView implements vscode.WebviewViewProvider {
 		webviewView.webview.html = this.getHtmlForWebview(webviewView.webview);
 
 		webviewView.webview.onDidReceiveMessage(e => {
+			console.log("[V]ODRM: ", e);
 			const { type, body } = e;
 			switch (type) {
 				case 'ready':

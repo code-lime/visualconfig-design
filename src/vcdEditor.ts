@@ -61,7 +61,7 @@ export class VcdEditor implements vscode.CustomTextEditorProvider {
 
 		// Receive message from the webview.
 		webviewPanel.webview.onDidReceiveMessage(e => {
-			console.log("ODRM: ", e);
+			console.log("[E]ODRM: ", e);
 			const { type, body } = e;
 			switch (type)
 			{
